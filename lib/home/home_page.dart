@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    return NewPicture();
+                    return NewPicture(barcode: true,);
                   },
                 ),
               );
@@ -66,7 +66,15 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white,
             ),
             backgroundColor: Colors.green,
-            onTap: () => print('SECOND CHILD'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return NewPicture(barcode: false,);
+                  },
+                ),
+              );
+            },
             label: "Labeling",
             labelBackgroundColor: Colors.green,
           ),

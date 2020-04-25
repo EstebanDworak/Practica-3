@@ -30,11 +30,25 @@ class _DetailsState extends State<Details> {
     } else {
       imageBytes = base64Decode(widget.imageLabeled.imagenBase64);
     }
+    List<Offset> offsets = widget.barcode.puntosEsquinas;
+    // return RectPainter(pointsList: offsets);
+    // return ;
 
     return Scaffold(
       appBar: AppBar(title: Text("Detalles")),
       body: Center(
-        child: Text("TODO: Imagen con rectangulo y algunos datos"),
+        child: Align(
+                  alignment: Alignment.center, child: Stack(
+            children: <Widget>[
+              Image.memory(imageBytes),
+              CustomPaint(
+                size: Size(MediaQuery.of(context).size.width,
+                    MediaQuery.of(context).size.height),
+                painter: RectPainter(pointsList: offsets),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

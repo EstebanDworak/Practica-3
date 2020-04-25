@@ -63,27 +63,46 @@ class _BarcodeScannerState extends State<BarcodeScanner>
                   itemBuilder: (BuildContext context, int index) {
                     return _showShimmer
                         ? ListTileShimmer()
-                        : ListTile(
-                            leading: CircleAvatar(
-                              child: Icon(Icons.code),
-                              backgroundColor: Colors.amber[50],
-                            ),
-                            title: Text(
-                              "$index - Codigo ${_appBloc.getBarcodeItemsList[index].tipoCodigo}",
-                            ),
-                            onTap: () {
-                              // TODO: mostrar detalle
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) {
-                                    return Details(
-                                      barcode:
-                                          _appBloc.getBarcodeItemsList[index],
-                                    );
-                                  },
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              ListTile(
+                                leading: CircleAvatar(
+                                  child: Icon(Icons.code),
+                                  backgroundColor: Colors.amber[50],
                                 ),
-                              );
-                            },
+                                title: Text(
+                                  "$index - ${_appBloc.getBarcodeItemsList[index].tituloUrl}",
+                                ),
+                                onTap: () {
+                                  // TODO: mostrar detalle
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) {
+                                        return Details(
+                                          barcode: _appBloc
+                                              .getBarcodeItemsList[index],
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                              // Text(_appBloc.getBarcodeItemsList[index].tituloUrl),
+                              Text(
+                                // _appBloc.getBarcodeItemsList[index].codigo,
+                                "URL: ${_appBloc.getBarcodeItemsList[index].codigo}",
+                                style: TextStyle(
+                                    color: Color.fromRGBO(180, 180, 180, 1)),
+                              ),
+                              Text(
+                                "Tipo de código: ${_appBloc.getBarcodeItemsList[index].tipoCodigo.toString()}",
+                                style: TextStyle(
+                                    color: Color.fromRGBO(180, 180, 180, 1)),
+                              )
+                              ,Divider()
+                            ],
                           );
                   },
                 )

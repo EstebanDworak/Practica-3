@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -67,10 +68,62 @@ class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
   }
 
   Future<void> _imgLabeling(File imageFile) async {
-    // TODO
+    final FirebaseVisionImage visionImage =
+        FirebaseVisionImage.fromFile(imageFile);
+    final ImageLabeler labeler = FirebaseVision.instance.imageLabeler();
+    final List<ImageLabel> labels = await labeler.processImage(visionImage);
+// final ImageLabeler cloudLabeler = FirebaseVision.instance.cloudImageLabeler();
+
+// final List<ImageLabel> cloudLabels = await cloudLabeler.processImage(visionImage);
+
+    List<int> imageBytes = await imageFile.readAsBytes();
+    String base64Image = base64Encode(imageBytes);
+
+    for (ImageLabel label in labels) {
+      // final String text = label.texto;
+      // final String entityId = label.;
+      // final double confidence = label.confidence;
+      
+      ImageLabelItem labela = new ImageLabelItem(
+          imagenBase64: base64Image,
+          similitud: label.confidence,
+          identificador: label.entityId,
+          texto: label.text);
+
+      _listLabeledItems.add(labela);
+    }
   }
 
   Future<void> _barcodeScan(File imageFile) async {
-    // TODO
+    final FirebaseVisionImage visionImage =
+        FirebaseVisionImage.fromFile(imageFile);
+    final BarcodeDetector barcodeDetector =
+        FirebaseVision.instance.barcodeDetector();
+    final List<Barcode> barcodes =
+        await barcodeDetector.detectInImage(visionImage);
+    print(barcodes);
+
+    List<int> imageBytes = await imageFile.readAsBytes();
+    String base64Image = base64Encode(imageBytes);
+
+    for (Barcode barcode in barcodes) {
+      final Rect boundingBox = barcode.boundingBox;
+      final List<Offset> cornerPoints = barcode.cornerPoints;
+
+      BarcodeItem barcodeItem = new BarcodeItem(
+          imagenBase64: base64Image,
+          codigo: barcode.rawValue,
+          tipoCodigo: barcode.valueType.toString(),
+          tituloUrl: barcode.url.url,
+          url: barcode.url,
+          areaDeCodigo: boundingBox,
+          puntosEsquinas: cornerPoints);
+
+      _listBarcodeItems.add(barcodeItem);
+    }
+
+    barcodeDetector.close();
+
+    var a = imageFile;
   }
 }

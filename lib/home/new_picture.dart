@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:practica_tres/bloc/application_bloc.dart';
 
 class NewPicture extends StatefulWidget {
-  NewPicture({Key key}) : super(key: key);
+  NewPicture({Key key, this.barcode}) : super(key: key);
+
+  final bool barcode;
 
   @override
   _NewPictureState createState() => _NewPictureState();
@@ -45,6 +47,8 @@ class _NewPictureState extends State<NewPicture> {
                       child: Text("Analizar"),
                       onPressed: () {
                         Navigator.of(context).pop();
+                        !widget.barcode ? BlocProvider.of<ApplicationBloc>(context)
+                            .add(ImageDetectorEvent()):
                         BlocProvider.of<ApplicationBloc>(context)
                             .add(BarcodeDetectorEvent());
                       },
